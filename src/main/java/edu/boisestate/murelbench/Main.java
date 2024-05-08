@@ -15,6 +15,7 @@ import org.openjdk.jmh.runner.options.TimeValue;
 import edu.boisestate.murelbench.commands.validation.ModeConverter;
 import edu.boisestate.murelbench.commands.validation.ResultFormatConverter;
 import edu.boisestate.murelbench.commands.validation.TimeUnitConverter;
+import edu.boisestate.murelbench.utils.Properties;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -40,6 +41,10 @@ public class Main implements Callable<Integer> {
 
     @ArgGroup(exclusive = false)
     ResultOptions resultOptions;
+
+    @Option(names = {"--seed"},
+        description = "Seed value used for random number generation")
+    protected long seed;
 
     @Option(names = {"--mode"},
         description = "Measurement Mode for benchmarks, all, single-shot, sample, and average.",
@@ -113,6 +118,11 @@ public class Main implements Callable<Integer> {
     protected String[] jmhArguments;
 
     public Integer call() throws Exception {
+
+        if (seed != 0) {
+            Properties.randomSeed = seed;
+        }
+        System.err.println(String.format("Using %s for seed value", Properties.randomSeed));
 
         ChainedOptionsBuilder builder = new OptionsBuilder();
 
