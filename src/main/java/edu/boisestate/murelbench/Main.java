@@ -114,6 +114,11 @@ public class Main implements Callable<Integer> {
         description = "Pattern used to exclude some benchmarks")
     protected String benchmarkExcludes;
 
+    @Option(names = {"--oracle"},
+        description = "Enable property checks for benchmarks that support it.",
+        negatable = true)
+    protected boolean useOracle;
+
     @Parameters(description = "Extra arguments to be passed directly to JMH, use `--`")
     protected String[] jmhArguments;
 
@@ -145,6 +150,11 @@ public class Main implements Callable<Integer> {
         if (!(benchmarkExcludes == null || benchmarkExcludes.isEmpty())) {
 
             builder.exclude(benchmarkExcludes);
+        }
+
+        Properties.useOracle = useOracle;
+        if (Properties.useOracle) {
+            builder.jvmArgsPrepend("-enableassertions");
         }
 
         if (jvmArgs != null) {
