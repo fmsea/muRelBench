@@ -1,0 +1,179 @@
+#+OPTIONS: toc:nil title:nil
+#+TITLE: muRelBench: Artifact Submission
+#+AUTHOR: Kenny Ballou
+#+EMAIL: kennyballou@u.boisestate.edu
+#+LINK: guix https://guix.gnu.org
+#+LINK: nix https://nixos.org
+#+LINK: picocli https://picocli.info/
+#+LINK: jmh https://github.com/openjdk/jmh
+#+LINK: artifact https://drive.google.com/file/d/1qsv-u2xHU50QF7h4XMPvIGPMuPgOKIem/view?usp=drive_link
+#+LATEX_HEADER: \usepackage[a4paper]{geometry}
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \usepackage{dirtree}
+* muRelBench: Artifact Submission
+:PROPERTIES:
+:header-args:bash: :eval never :exports code
+:END:
+
+Artifact URL: https://drive.google.com/file/d/1qsv-u2xHU50QF7h4XMPvIGPMuPgOKIem/view?usp=drive_link
+
+After downloading the [[artifact][artifact]], please use the checksum from the abstract to
+verify its validity.  As /this/ document is part of the artifact, we cannot copy
+the checksum into this file.
+
+The [[artifact][artifact]] can be unpacked using:
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+tar -zxf 6.tar.gz
+#+end_src
+
+An OCI/container image is available via the ~murelbench.oci.tar.gz~ archive.
+
+The checksum of the container image is the following:
+
+#+NAME: CHECKSUM
+#+begin_src bash :exports results :dir ./ :eval yes
+sha256sum murelbench.oci.tar.gz
+#+end_src
+
+Additionally, to verify the checksum of the archives, the following command can
+be used:
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+sha256sum -c murelbench.oci.tar.gz.sha256
+#+end_src
+
+If this command returns the following, then the archives have matching
+checksums:
+
+#+begin_example
+murelbench.oci.tar.gz: OK
+#+end_example
+
+To load the OCI, use something similar to the following:
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+docker images load -i murelbench.oci.tar.gz
+#+end_src
+
+The tag of the loaded container should be: ~bash-benchmarks-jar-openjdk:latest~.
+For convenience, this can be retagged (renamed):
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+docker image tag \
+       bash-benchmarks-jar-openjdk:latest \
+       murelbench:latest
+#+end_src
+
+To execute the benchmarks within the container, the following command can be
+used:
+
+Benchmarks should execute in about an hour.
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+docker run -ti murelbench:latest
+#+end_src
+
+Help options are available under the usual mechanism: ~--help~
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+docker run -ti murelbench:latest --help
+#+end_src
+
+** Source Code and Development Environment
+
+The source code can be found online via GitHub.
+It can be cloned from the following URL:
+
+https://github.com/BoiseState/muRelBench
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+git clone ssh://github.com/BoiseState/muRelBench.git
+#+end_src
+
+The project uses [[guix][Guix]] for project dependencies and timeless environment setup.
+Guix/[[nix][Nix]] can be thought of as a ~virtualenv~ equivalent for any package or
+language.  To activate, use the following:
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+guix time-machine -C channels.scm -- shell -m manifest.scm
+#+end_src
+
+In general, for evaluation, this should be unnecessary if Java version 11 and
+Maven is available.  However, without Guix, a new container image cannot be
+built, as this is done through ~guix pack~.
+
+Packaging and building is accomplished via maven. Use the following command to
+build a new package:
+
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+mvn clean package
+#+end_src
+
+This should result in a jar file in the ~target~ directory:
+~target/benchmarks.jar~.  To execute benchmarks from the built package, use the
+following command:
+#+attr_latex: :options basicstyle=\small\ttfamily
+#+begin_src bash
+java -jar target/benchmarks.jar
+#+end_src
+
+*** Outline of Source
+
+#+begin_src bash :eval yes :exports results :results output :dir ../
+tree src/main/java
+#+end_src
+
+The entry point into the project can be found in the ~Main.java~ file, under the
+root package.  This uses a [[picocli][picocli]] frontend over [[jmh][JMH]], which then invokes ~jmh~
+and executes the benchmarks.  Of particular interest, the
+~src/main/java/edu/boisestate/mulrebench/benchmarks~ folder contains a single
+benchmark class, ~OctagonClosureBench~, and a ~states~ subfolder which contains the
+synthetic state objects used for benchmarks.  The synthetic states use domains
+from the ~src/main/java/edu/boisestate/murelbench/domains~ folder.  Specifically,
+~OctagonDifferenceBoundedMatrix~, representing octagons and the ~Constraint~ class.
+
+* Build Stuff                                                              :noexport:
+:PROPERTIES:
+:header-args:bash: :eval query :results none
+:END:
+
+#+begin_src bash :dir ../ :detached t
+make -k package
+#+end_src
+
+#+begin_src bash
+cp /gnu/store/j4yjcbvv185ns2g8a5yxg8ir8mfywmv7-bash-benchmarks-jar-openjdk-docker-pack.tar.gz murelbench.oci.tar.gz
+#+end_src
+
+#+begin_src bash :eval yes :exports none :results file :file murelbench.oci.tar.gz.sha256
+sha256sum murelbench.oci.tar.gz
+#+end_src
+
+#+begin_src bash :detached t :results none
+tar -zcf 6.tar.gz README.org README.pdf murelbench.oci.tar.gz murelbench.oci.tar.gz.sha256
+#+end_src
+
+#+name: artifact-checksum
+#+begin_src bash :results file :file 6.tar.gz.sha256
+sha256sum 6.tar.gz
+#+end_src
+
+#+begin_src bash :eval yes :results none :detached t
+guix shell texlive python-pygments -- latexmk -xelatex README.tex
+#+end_src
+
+* Local Variables                                                          :noexport:
+
+# Local Variables:
+# mode: org-mode
+# org-latex-listings-options: (("breaklines" "true") ("firstnumber" "auto") ("frame" "single") ("numbers" "left") ("numbersep" "5pt") ("numberstyle" "\\tiny") ("showspaces" "false") ("showstringspaces" "false") ("stepnumber" "1") ("title" "\\lstname"))
+# End:
