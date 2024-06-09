@@ -10,7 +10,7 @@ public class TimeUnitConverter implements ITypeConverter<TimeUnit> {
             return TimeUnit.SECONDS;
         } else if ("ms".equals(value.toLowerCase()) || "milliseconds".equals(value.toLowerCase())) {
             return TimeUnit.MILLISECONDS;
-        } else if ("microseconds".equals(value.toLowerCase())) {
+        } else if ("us".equals(value.toLowerCase()) || "microseconds".equals(value.toLowerCase())) {
             return TimeUnit.MICROSECONDS;
         } else if ("ns".equals(value.toLowerCase()) || "nanoseconds".equals(value.toLowerCase())) {
             return TimeUnit.NANOSECONDS;
