@@ -6,16 +6,18 @@
 #+LINK: nix https://nixos.org
 #+LINK: picocli https://picocli.info/
 #+LINK: jmh https://github.com/openjdk/jmh
-#+LINK: artifact https://drive.google.com/file/d/1qsv-u2xHU50QF7h4XMPvIGPMuPgOKIem/view?usp=drive_link
+#+LINK: artifact https://drive.google.com/file/d/1L74CfsCMotAACiVv1gUex97RkKXS2I6G/view?usp=drive_link
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usepackage{datatool}
+#+LATEX_HEADER: \usepackage{booktabs}
 * muRelBench: Artifact Submission
 :PROPERTIES:
 :header-args:bash: :eval never :exports code
 :END:
 
-Artifact URL: https://drive.google.com/file/d/1qsv-u2xHU50QF7h4XMPvIGPMuPgOKIem/view?usp=drive_link
+Artifact URL: [[https://drive.google.com/file/d/1L74CfsCMotAACiVv1gUex97RkKXS2I6G/view?usp=drive_link]]
 
 After downloading the [[artifact][artifact]], please use the checksum from the abstract to
 verify its validity.  As /this/ document is part of the artifact, we cannot copy
@@ -25,7 +27,7 @@ The [[artifact][artifact]] can be unpacked using:
 
 #+attr_latex: :options basicstyle=\small\ttfamily
 #+begin_src bash
-tar -zxf 6.tar.gz
+tar -zxf 6-v2.tar.gz
 #+end_src
 
 An OCI/container image is available via the ~murelbench.oci.tar.gz~ archive.
@@ -56,16 +58,21 @@ To load the OCI, use something similar to the following:
 
 #+attr_latex: :options basicstyle=\small\ttfamily
 #+begin_src bash
-docker images load -i murelbench.oci.tar.gz
+docker image load -i murelbench.oci.tar.gz
 #+end_src
 
-The tag of the loaded container should be: ~bash-benchmarks-jar-openjdk:latest~.
+#+begin_quote
+Under older versions of Docker, the above command may need to be adjusted:
+~docker load -i ...~.
+#+end_quote
+
+The tag of the loaded container should be: ~bash-glibc-locales-benchmarks-jar:latest~.
 For convenience, this can be retagged (renamed):
 
 #+attr_latex: :options basicstyle=\small\ttfamily
 #+begin_src bash
 docker image tag \
-       bash-benchmarks-jar-openjdk:latest \
+       bash-glibc-locales-benchmarks-jar:latest \
        murelbench:latest
 #+end_src
 
@@ -74,9 +81,16 @@ used:
 
 Benchmarks should execute in about an hour.
 
+#+begin_quote
+If you see question marks in the output, e.g., ~??~, it means there's an issue
+with Unicode fonts and/or locality.  Adjusting the timescale can be an easy
+fix, e.g., add ~--time-unit=us~ to the following command.  However, this won't
+remove all ~?~ because JMH output inherently uses several Unicode characters.
+#+end_quote
+
 #+attr_latex: :options basicstyle=\small\ttfamily
 #+begin_src bash
-docker run -ti murelbench:latest
+docker run -ti murelbench:latest [--time-unit=us]
 #+end_src
 
 Help options are available under the usual mechanism: ~--help~
@@ -135,11 +149,63 @@ tree src/main/java
 The entry point into the project can be found in the ~Main.java~ file, under the
 root package.  This uses a [[picocli][picocli]] frontend over [[jmh][JMH]], which then invokes ~jmh~
 and executes the benchmarks.  Of particular interest, the
-~src/main/java/edu/boisestate/mulrebench/benchmarks~ folder contains a single
-benchmark class, ~OctagonClosureBench~, and a ~states~ subfolder which contains the
-synthetic state objects used for benchmarks.  The synthetic states use domains
-from the ~src/main/java/edu/boisestate/murelbench/domains~ folder.  Specifically,
-~OctagonDifferenceBoundedMatrix~, representing octagons and the ~Constraint~ class.
+~src/main/java/edu/boisestate/mulrebench/benchmarks~ folder contains a
+single benchmark class, ~OctagonClosureBench~, and a ~states~ subfolder which
+contains the synthetic state objects used for benchmarks.  The synthetic states
+use domains from the ~src/main/java/edu/boisestate/murelbench/domains~ folder.
+Specifically, ~OctagonDifferenceBoundedMatrix~, representing octagons and the
+~Constraint~ class.
+
+* Expected Output
+
+The expected output for the benchmarks can be found in the following table.
+These results were performed on a laptop with an Intel Xeon E5-1620v4 CPU and
+16GB of RAM.  For the expected output, we created a CSV file, ~benchmarks.csv~,
+using the ~--result~ and ~--result-format~ options.  Finally, the output is
+measured in microseconds.  We have dropped the package name and the ~count~
+parameter from the output since this makes the output too large.
+
+#+begin_src latex
+\DTLloaddb{benchmarks}{benchmarks.csv}
+\begin{table}[ht]
+  \centering
+  \caption{Expected output from \texttt{muRelBench}}
+  {\tiny
+  \DTLdisplaylongdb[omit={Threads,Param: count}]{benchmarks}
+  }
+\end{table}
+#+end_src
+
+#+begin_quote
+The CSV file uses different headers than the output from the tool.  Below, we
+describe the output of the framework, and in braces, the CSV headers if
+different.
+#+end_quote
+
+Some explanation of the summary output is necessary to understand this output
+and compare for validation.  The first column, ~Benchmark~, is the name of the
+method of the benchmark.  Next, we have the parameters of the experiments, ~(N)~
+{~Param: N~}, ~(count)~ {~Param: count~}, and ~(density)~ {~Param: density~}.  ~(N)~ is the
+number of variables or the size of the synthetic matrices.  ~(count)~ represents
+the number of constraints added to each matrix.  Finally, ~(density)~ denotes
+level of "connection" between nodes within the synthetic benchmark.  More
+connections lead to a "denser" matrix of values.  The next two columns report
+the kind of measurement for the benchmark, ~mode~, and the number of trials for
+the benchmark, ~Cnt~ {~Samples~}.  The last three columns display the "Score" of
+the benchmark, ~Score~, the variation within the benchmark, ~Error~ {~Score Error
+(99.9%)~}, and the units of the measured score, ~Units~.  Between the ~Score~ and
+~Error~ column may be a ~?~ or a ~±~ sign, depending on locality and Unicode fonts.
+At certain time scales, the value of the score may have ~??~ in the values,
+usually preceded by a ~10~ and possible another ~?~.  The single ~?~ should represent
+the ~≈~ symbol.  The two ~??~ are exponent of the scientific notation for the
+score, typically something like ~-3~.  The error of a measure should display
+within the significant digits.  At some time units, the error is below the
+significant digits of the score, thus, the error is ~0~.
+
+On the results themselves, we expect both ~chawdharyIncrementalClosure~ and
+~incrementalClosure~ to demonstrate similar performance within a few 100 us/ops.
+Moreover, we expect ~fullClosure~ to be orders of magnitude above the incremental
+counterparts.
 
 * Build Stuff                                                              :noexport:
 :PROPERTIES:
@@ -151,7 +217,7 @@ make -k package
 #+end_src
 
 #+begin_src bash
-cp /gnu/store/j4yjcbvv185ns2g8a5yxg8ir8mfywmv7-bash-benchmarks-jar-openjdk-docker-pack.tar.gz murelbench.oci.tar.gz
+cp /gnu/store/3rbsygz3mh12mlr4d4lkxa72rpvdd4kv-bash-glibc-locales-benchmarks-jar-docker-pack.tar.gz murelbench.oci.tar.gz
 #+end_src
 
 #+begin_src bash :eval yes :exports none :results file :file murelbench.oci.tar.gz.sha256
@@ -159,21 +225,23 @@ sha256sum murelbench.oci.tar.gz
 #+end_src
 
 #+begin_src bash :detached t :results none
-tar -zcf 6.tar.gz README.org README.pdf murelbench.oci.tar.gz murelbench.oci.tar.gz.sha256
+tar -zcf 6-v2.tar.gz README.org README.pdf benchmarks.csv murelbench.oci.tar.gz murelbench.oci.tar.gz.sha256
 #+end_src
 
 #+name: artifact-checksum
-#+begin_src bash :results file :file 6.tar.gz.sha256
-sha256sum 6.tar.gz
+#+begin_src bash :results file :file 6-v2.tar.gz.sha256
+sha256sum 6-v2.tar.gz
 #+end_src
 
 #+begin_src bash :eval yes :results none :detached t
 guix shell texlive python-pygments -- latexmk -xelatex README.tex
 #+end_src
 
-* Local Variables                                                          :noexport:
 
 # Local Variables:
 # mode: org-mode
 # org-latex-listings-options: (("breaklines" "true") ("firstnumber" "auto") ("frame" "single") ("numbers" "left") ("numbersep" "5pt") ("numberstyle" "\\tiny") ("showspaces" "false") ("showstringspaces" "false") ("stepnumber" "1") ("title" "\\lstname"))
 # End:
+
+
+#  LocalWords:  checksums frontend
