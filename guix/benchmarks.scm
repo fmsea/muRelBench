@@ -61,6 +61,7 @@ exec ~a/bin/java -jar ~a/lib/benchmarks.jar $@" bash jdk jar)))
 (define %manifest
   (packages->manifest
    (list bash
+         glibc-locales
          benchmarks-jar
          `(,openjdk11 "jdk")
           entry-script)))
