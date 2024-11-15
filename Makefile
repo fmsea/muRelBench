@@ -11,3 +11,7 @@ package: $(JARFILE)
 	guix pack --format=docker \
 		--entry-point=bin/benchmarks.sh \
 		--manifest=guix/benchmarks.scm
+
+.PHONY: clean
+clean:
+	-rm $(JARFILE)
