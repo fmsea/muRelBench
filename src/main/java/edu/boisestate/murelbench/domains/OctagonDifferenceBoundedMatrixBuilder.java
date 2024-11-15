@@ -2,7 +2,7 @@ package edu.boisestate.murelbench.domains;
 
 public class OctagonDifferenceBoundedMatrixBuilder {
 
-    private OctagonDifferenceBoundedMatrix matrix;
+    protected OctagonDifferenceBoundedMatrix matrix;
 
     public OctagonDifferenceBoundedMatrixBuilder(int N, boolean top) {
         this.matrix = new OctagonDifferenceBoundedMatrix(N, top);

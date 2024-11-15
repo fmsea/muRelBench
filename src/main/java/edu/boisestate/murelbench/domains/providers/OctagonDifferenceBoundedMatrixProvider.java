@@ -4,7 +4,7 @@ import java.util.Random;
 
 import edu.boisestate.murelbench.domains.Constraint;
 import edu.boisestate.murelbench.domains.OctagonDifferenceBoundedMatrix;
-import edu.boisestate.murelbench.domains.OctagonDifferenceBoundedMatrixBuilder;
+import edu.boisestate.murelbench.domains.ConsistentOctagonDifferenceBoundedMatrixBuilder;
 import edu.boisestate.murelbench.utils.GlobalRandom;
 
 public class OctagonDifferenceBoundedMatrixProvider{
@@ -21,15 +21,16 @@ public class OctagonDifferenceBoundedMatrixProvider{
 
     public static OctagonDifferenceBoundedMatrix sample(int N, double density) {
         Random r = GlobalRandom.getRandom();
-        OctagonDifferenceBoundedMatrixBuilder mb = new OctagonDifferenceBoundedMatrixBuilder(N, true);
+        ConsistentOctagonDifferenceBoundedMatrixBuilder mb = new ConsistentOctagonDifferenceBoundedMatrixBuilder(N, true);
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++)  {
                 if (i == j) {
                     mb.setConstraint(i, j, Constraint.of(0));
                 } else if (r.nextDouble() < density) {
                     Constraint c = ConstraintProvider.sample();
-                    mb.setConstraint(i, j, c);
-                    mb.setConstraint(j ^ 1, i ^ 1, c.copy());
+                    while (!mb.maybeSetConstraint(i, j, c)) {
+                        c = ConstraintProvider.sample();
+                    }
                 }
             }
         }
