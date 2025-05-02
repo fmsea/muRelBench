@@ -4,6 +4,7 @@
   #:use-module (guix profiles)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
+  #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages python)
   #:use-module (gnu packages java)
   #:use-module (gnu packages maven)
@@ -17,6 +18,8 @@
          python-wrapper
          maven
          bash
+         cwltool
+         ccwl
          gnuplot)))
 
 %murelbench-manifest

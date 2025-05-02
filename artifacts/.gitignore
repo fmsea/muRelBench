@@ -8,3 +8,5 @@
 *.tar.gz
 *.xdv
 *.sha256
+*.csv
+*.svg

@@ -1,10 +1,19 @@
 JARFILE=./target/benchmarks.jar
 
 .PHONY: all
-all: $(JARFILE) package
+all: $(JARFILE) workflow.cwl package
 
 $(JARFILE):
 	mvn --batch-mode package
+
+%.cwl: %.scm
+	ccwl compile $< > $@
+
+%.dot: %.scm
+	ccwl compile --to=dot $< > $@
+
+%.svg: %.dot
+	dot -Tsvg -o$@ $<
 
 .PHONY: package
 package: $(JARFILE)
@@ -14,4 +23,5 @@ package: $(JARFILE)
 
 .PHONY: clean
 clean:
-	-rm $(JARFILE)
+	-rm $(JARFILE) \
+		workflow.cwl
