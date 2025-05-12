@@ -42,6 +42,28 @@ To execute the benchmarks, the following command should be sufficient:
 java -jar target/benchmarks.jar
 ```
 
+### Reproducing Results from Publication ###
+
+The following command was used to produce the results for the linked
+publication:
+
+```bash
+java -jar target/benchmarks.jar \
+     --time-unit=ms \
+     --result-format=csv \
+     --result=/tmp/benchmarks.csv
+```
+
+This produces an output file `/tmp/benchmarks.csv` which can be parsed and
+plotted using the files within the `scripts` directory.
+
+### WIP: Workflow ###
+
+While it is still work in progress, the `workflow.scm` file describes the
+entire workflow using [Concise Common Workflow Language (ccwl)][ccwl].  The
+[ccwl][ccwl] tool compiles down to [Common Workflow Language (cwl)][cwl], which
+can then run the entire workflow using a [cwl][cwl] implementation.
+
 # License #
 
 The code is released AS-IS, WITHOUT warranty in the hopes that it will be
@@ -53,3 +75,7 @@ found [online][GPL-v3] at https://www.gnu.org/licenses/gpl-3.0.en.html.
 [GPL-v3]: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 [guix]: https://guix.gnu.org/
+
+[ccwl]: https://ccwl.systemreboot.net/
+
+[cwl]: https://www.commonwl.org/
