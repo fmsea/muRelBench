@@ -1,12 +1,12 @@
-package edu.boisestate.murelbench.benchmarks.states;
+package dev.fmsea.murelbench.benchmarks.states;
 
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import edu.boisestate.murelbench.domains.OctagonDifferenceBoundedMatrix;
-import edu.boisestate.murelbench.domains.providers.OctagonDifferenceBoundedMatrixProvider;
+import dev.fmsea.murelbench.domains.OctagonDifferenceBoundedMatrix;
+import dev.fmsea.murelbench.domains.providers.OctagonDifferenceBoundedMatrixProvider;
 
 @State(Scope.Thread)
 public class SyntheticOctagon {

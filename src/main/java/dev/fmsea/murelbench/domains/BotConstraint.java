@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.domains;
+package dev.fmsea.murelbench.domains;
 
 import java.util.Optional;
 

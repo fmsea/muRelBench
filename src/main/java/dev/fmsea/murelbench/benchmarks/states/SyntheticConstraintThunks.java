@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.benchmarks.states;
+package dev.fmsea.murelbench.benchmarks.states;
 
 import java.util.Set;
 
@@ -7,8 +7,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import edu.boisestate.murelbench.domains.ConstraintUpdateThunk;
-import edu.boisestate.murelbench.domains.providers.ConstraintUpdateThunkProvider;
+import dev.fmsea.murelbench.domains.ConstraintUpdateThunk;
+import dev.fmsea.murelbench.domains.providers.ConstraintUpdateThunkProvider;
 
 @State(Scope.Thread)
 public class SyntheticConstraintThunks {

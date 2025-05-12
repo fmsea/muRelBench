@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench;
+package dev.fmsea.murelbench;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -12,10 +12,10 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
-import edu.boisestate.murelbench.commands.validation.ModeConverter;
-import edu.boisestate.murelbench.commands.validation.ResultFormatConverter;
-import edu.boisestate.murelbench.commands.validation.TimeUnitConverter;
-import edu.boisestate.murelbench.utils.Properties;
+import dev.fmsea.murelbench.commands.validation.ModeConverter;
+import dev.fmsea.murelbench.commands.validation.ResultFormatConverter;
+import dev.fmsea.murelbench.commands.validation.TimeUnitConverter;
+import dev.fmsea.murelbench.utils.Properties;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -107,7 +107,7 @@ public class Main implements Callable<Integer> {
 
     @Option(names = {"--include"},
         description = "Pattern used to include benchmarks",
-        defaultValue = "edu.boisestate.murelbench.benchmarks.*Bench")
+        defaultValue = "dev.fmsea.murelbench.benchmarks.*Bench")
     protected String benchmarkIncludes;
 
     @Option(names = {"--exclude"},

@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.commands.validation;
+package dev.fmsea.murelbench.commands.validation;
 
 import java.util.concurrent.TimeUnit;
 

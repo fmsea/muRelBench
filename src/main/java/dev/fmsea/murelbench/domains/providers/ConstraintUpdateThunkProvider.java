@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.domains.providers;
+package dev.fmsea.murelbench.domains.providers;
 
 import java.util.Random;
 import java.util.Set;
@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import edu.boisestate.murelbench.domains.Constraint;
-import edu.boisestate.murelbench.domains.ConstraintUpdateThunk;
-import edu.boisestate.murelbench.utils.GlobalRandom;
+import dev.fmsea.murelbench.domains.Constraint;
+import dev.fmsea.murelbench.domains.ConstraintUpdateThunk;
+import dev.fmsea.murelbench.utils.GlobalRandom;
 
 public class ConstraintUpdateThunkProvider {
 

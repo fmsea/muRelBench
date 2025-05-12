@@ -1,11 +1,11 @@
-package edu.boisestate.murelbench.domains.providers;
+package dev.fmsea.murelbench.domains.providers;
 
 import java.util.Random;
 
-import edu.boisestate.murelbench.domains.Constraint;
-import edu.boisestate.murelbench.domains.OctagonDifferenceBoundedMatrix;
-import edu.boisestate.murelbench.domains.ConsistentOctagonDifferenceBoundedMatrixBuilder;
-import edu.boisestate.murelbench.utils.GlobalRandom;
+import dev.fmsea.murelbench.domains.Constraint;
+import dev.fmsea.murelbench.domains.OctagonDifferenceBoundedMatrix;
+import dev.fmsea.murelbench.domains.ConsistentOctagonDifferenceBoundedMatrixBuilder;
+import dev.fmsea.murelbench.utils.GlobalRandom;
 
 public class OctagonDifferenceBoundedMatrixProvider{
 

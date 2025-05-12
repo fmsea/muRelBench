@@ -1,14 +1,14 @@
-package edu.boisestate.murelbench.benchmarks;
+package dev.fmsea.murelbench.benchmarks;
 
 import java.util.function.Supplier;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.infra.Blackhole;
 
-import edu.boisestate.murelbench.benchmarks.states.SyntheticConstraintThunks;
-import edu.boisestate.murelbench.benchmarks.states.SyntheticOctagon;
-import edu.boisestate.murelbench.domains.Constraint;
-import edu.boisestate.murelbench.domains.OctagonDifferenceBoundedMatrix;
+import dev.fmsea.murelbench.benchmarks.states.SyntheticConstraintThunks;
+import dev.fmsea.murelbench.benchmarks.states.SyntheticOctagon;
+import dev.fmsea.murelbench.domains.Constraint;
+import dev.fmsea.murelbench.domains.OctagonDifferenceBoundedMatrix;
 
 public class OctagonClosureBench {
 

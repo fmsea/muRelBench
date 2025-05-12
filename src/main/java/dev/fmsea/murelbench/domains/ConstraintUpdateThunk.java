@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.domains;
+package dev.fmsea.murelbench.domains;
 
 public class ConstraintUpdateThunk {
     public final int s;

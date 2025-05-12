@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.commands.validation;
+package dev.fmsea.murelbench.commands.validation;
 
 import org.openjdk.jmh.results.format.ResultFormatType;
 

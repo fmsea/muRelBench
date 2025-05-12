@@ -1,4 +1,4 @@
-package edu.boisestate.murelbench.utils;
+package dev.fmsea.murelbench.utils;
 
 public class GlobalRandom {
 
