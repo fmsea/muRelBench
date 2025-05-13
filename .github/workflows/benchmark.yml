@@ -24,4 +24,9 @@ jobs:
       - name: Build Project
         run: make ./target/benchmarks.jar
       - name: Run Benchmarks
-        run: java -jar ./target/benchmarks.jar --time-unit=ms
+        run: java -jar ./target/benchmarks.jar --time-unit=ms --result-format=csv --result=benchmarks.csv
+      - name: Archive Benchmarks
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmarks.csv
+          path: ./benchmarks.csv
